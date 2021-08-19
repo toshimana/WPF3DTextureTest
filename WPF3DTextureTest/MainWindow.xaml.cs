@@ -14,6 +14,7 @@ namespace WPF3DTextureTest
         {
             InitializeComponent();
 
+            // Camera Setting
             var camera = new OrthographicCamera();
             camera.Position = new Point3D(0, 0, 1);
             camera.LookDirection = new Vector3D(0, 0, -1);
@@ -21,12 +22,14 @@ namespace WPF3DTextureTest
 
             this.Viewport.Camera = camera;
 
+            // Light Setting
             var light = new DirectionalLight(Colors.White, new Vector3D(0, 0, -1));
             var lightVisual = new ModelVisual3D();
             lightVisual.Content = light;
 
             this.Viewport.Children.Add(lightVisual);
 
+            // TextureImage Setting
             int width = 640;
             int height = 640;
 
@@ -35,6 +38,7 @@ namespace WPF3DTextureTest
             Cv2.Rectangle(colorImage, new OpenCvSharp.Rect(width * 2 / 8, height * 2 / 8, width * 2 / 4, height * 2 / 4), new Scalar(0, 255, 0), thickness: -1);
             Cv2.Rectangle(colorImage, new OpenCvSharp.Rect(width * 3 / 8, height * 3 / 8, width * 1 / 4, height * 1 / 4), new Scalar(0, 0, 255), thickness: -1);
 
+            // Create MeshModel - TextureCoorinates Range : [0-1]
             {
                 var mesh = new MeshGeometry3D();
 
@@ -46,9 +50,9 @@ namespace WPF3DTextureTest
                 mesh.Normals.Add(new Vector3D(0, 0, 1));
                 mesh.Normals.Add(new Vector3D(0, 0, 1));
 
-                mesh.TextureCoordinates.Add(new System.Windows.Point(    0 / width, height / height));
-                mesh.TextureCoordinates.Add(new System.Windows.Point(width / width, height / height));
-                mesh.TextureCoordinates.Add(new System.Windows.Point(    0 / width,      0 / height));
+                mesh.TextureCoordinates.Add(new System.Windows.Point(0.0, 1.0));
+                mesh.TextureCoordinates.Add(new System.Windows.Point(1.0, 1.0));
+                mesh.TextureCoordinates.Add(new System.Windows.Point(0.0, 0.0));
 
                 mesh.TriangleIndices.Add(0);
                 mesh.TriangleIndices.Add(1);
@@ -67,6 +71,7 @@ namespace WPF3DTextureTest
                 this.Viewport.Children.Add(modelVisual);
             }
 
+            // Create MeshModel - TextureCoorinates Range : [1/8-7/8]
             {
                 var mesh = new MeshGeometry3D();
 
@@ -87,7 +92,9 @@ namespace WPF3DTextureTest
                 mesh.TriangleIndices.Add(2);
 
                 bool isPartialTexture = true;
-                if (isPartialTexture) {
+                if (isPartialTexture)
+                {
+                    // Set Dummy TextureCoordinates - Range [0-1]
                     mesh.Positions.Add(default(Point3D));
                     mesh.Positions.Add(default(Point3D));
 
